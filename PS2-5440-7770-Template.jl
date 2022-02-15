@@ -11,7 +11,7 @@ md"""
 
 # ╔═╡ 7057c8e4-9e94-4a28-a885-07f5c96ebe39
 html"""
-<p style="font-size:20px;">Student name, Student name, Student name ... Student name</br>
+<p style="font-size:20px;">Divya Lakshmi, dl653 & Owais Khalid, omk24</br>
 Smith School of Chemical and Biomolecular Engineering, Cornell University, Ithaca NY 14850</p>
 """
 
@@ -25,14 +25,45 @@ md"""
 #### Convex analysis: compute the extreme pathways
 """
 
-# ╔═╡ 97b0763d-dcab-4afa-b660-52e18b3d523f
-begin
-	# fill me in ...
-end
+# ╔═╡ eb4fe95f-a54e-456a-a443-978ed227edfd
+md"""
+
+For the P array computed using the expa algorithm, we get a 5x21 matrix. The number of rows indicate the number of extreme pathways. Hence, the total number of extreme pathways is 5.
+
+"""
+
+# ╔═╡ 1a345dd5-e8bf-4c9e-90aa-493394ba24a1
+n_expa = 5
+
+# ╔═╡ cb5e7a26-d311-4a62-83c8-323a07e935a6
+md"""
+
+From our stoichiometric array, the reaction producing urea is the one with flux $v_3$, which is indicated in the $3^{rd}$ column of the array. Similarly, in the P array, the $3^{rd}$ column is the reaction producing urea, and we see that $2$ pathways (the $1^{st}$ and the $3^{rd}$) have non-zero values, hence indicating the involvement of the urea production reaction in those pathways. Therefore, $2$ of the extreme pathways are involved in the production of urea.
+
+"""
+
+# ╔═╡ a2ba2e62-7a4f-47e8-bce9-9aa4fa41c96a
+md"""
+
+To calculate the reaction frequency for each reaction (the columns of the $P$ array), we simply find the number of extreme pathways that involve a specific reaction, and divide by the total number of extreme pathways ($5$). The same is presented below:
+
+"""
+
+# ╔═╡ 29ca1e0c-6bb5-4710-a1af-525a64a18633
+md"""
+
+Hence, reaction frequencies for this given network are $0.2, 0.4$ or $0.6$.
+
+"""
 
 # ╔═╡ b473b17e-3bf5-4b6c-af24-fe57b5a7e7e9
 md"""
 #### Metabolite connectivity array (MCA)
+"""
+
+# ╔═╡ e5729d05-0f4b-466a-bb90-65dba06e6de8
+md"""
+Rank of metabolite connectivity: H2O > L-Arginine = L-Citrulline > Hcat = Oxygen = NADP = NADPH = Nitricoxide > AMP = ATP = Carbamoylphosphate = Diphosphate = Fumarate = L-Aspartate = Phosphate = Urea = L-Ornithine = N-(L-Arginino)succinate
 """
 
 # ╔═╡ b7e5d1a6-57ed-4d09-a039-a4bd12386367
@@ -40,14 +71,24 @@ md"""
 #### Reaction connectivity array (RCA)
 """
 
-# ╔═╡ 4520fc6e-7305-487e-924d-af22406e6d45
-begin
-	# fill me in ...
-end
-
-# ╔═╡ 8dff5060-d810-4fa8-b229-89f8bd6c3601
+# ╔═╡ a1779026-14f4-4acd-8189-3ac916b3ca31
 md"""
-#### Julia Function Library
+Rank of reaction connectivity: Fv5 = Rv5 > v1 > v3 = v4 > v2 > b1 = b2 = .... b14
+"""
+
+# ╔═╡ c0f3f6f2-2b86-4e03-990b-9dea3dc1fd4f
+md"""
+### Correlation between Reaction Frequency & Reaction Connectivity
+"""
+
+# ╔═╡ b26f56b1-e6b8-40b7-ac69-d03389678b64
+md"""
+The scatterplot shows no correlation between the reaction connectivities & reaction frequencies.
+"""
+
+# ╔═╡ 4c7815da-0e57-4974-a42f-a768e98b56f6
+md"""
+### Julia function library
 """
 
 # ╔═╡ 267865de-1b5c-4579-861b-c6c46beb4739
@@ -85,6 +126,104 @@ begin
 	nothing
 end
 
+# ╔═╡ 5338451e-3c4b-4030-bbbb-42eaf4209a89
+begin
+	# Set up a collection of reaction strings
+	reaction_array= Array{String,1}()
+ 
+	#stoichiometric array -
+	#internal reactions -
+	push!(reaction_array,"v₁,ATP+L-Citrulline+L-Aspartate,AMP+Diphosphate+N-(L-Arginino)succinate,false")
+	push!(reaction_array,"v₂,N-(L-Arginino)succinate,Fumarate+L-Arginine,false")
+	push!(reaction_array,"v₃,L-Arginine+H2O,L-Ornithine+Urea,false")
+	push!(reaction_array,"v₄,Carbamoylphosphate+L-Ornithine,Phosphate+L-Citrulline,false")
+	push!(reaction_array,"v₅,2*L-Arginine+4*Oxygen+3*NADPH+3*Hcat,2*Nitricoxide+2*L-Citrulline+3*NADP+4*H2O,true")
+
+ 
+	#exchange reactions -
+	push!(reaction_array,"b1,∅,Carbamoylphosphate,false")
+	push!(reaction_array,"b2,∅,L-Aspartate,false")
+	push!(reaction_array,"b3,Fumarate,∅,false")
+	push!(reaction_array,"b4,Urea,∅,false")
+	push!(reaction_array,"b5,∅,Oxygen,false")
+	push!(reaction_array,"b6,∅,ATP,false")
+	push!(reaction_array,"b7,AMP,∅,false")
+	push!(reaction_array,"b8,∅,Hcat,false")
+	push!(reaction_array,"b9,NADP,∅,false")
+	push!(reaction_array,"b10,∅,NADPH,false")
+	push!(reaction_array,"b11,Phosphate,∅,false")
+	push!(reaction_array,"b12,Nitricoxide,∅,false")
+	push!(reaction_array,"b13,Diphosphate,∅,false")
+	push!(reaction_array, "b14,∅,H2O,true")
+
+	# compute the stoichiometric matrix -
+	(S, species_array, reaction_name_array) = lib.build_stoichiometric_matrix(reaction_array;expand=true);
+
+	#show -
+	nothing
+
+end
+
+# ╔═╡ 1498ca36-3870-4b19-9794-923153816643
+(M,R)=size(S)
+
+# ╔═╡ ed1a97f7-c10e-4874-be48-ac8066e45301
+species_array
+
+# ╔═╡ 2297a0e5-aa0e-43ad-95cc-fbb07d7c1c86
+S
+
+# ╔═╡ 062af4ad-445f-400d-86f1-2bfc99b643b0
+reaction_name_array
+
+# ╔═╡ 9a98c403-9f9f-4b07-8482-d12309de7bc8
+#binary stoichiometric array -
+B=S|> lib.binary_stoichiometric_matrix
+
+# ╔═╡ 999ae1fd-5341-4f66-9db2-dec53fa0cd49
+begin
+	MCA = B*transpose(B)
+end
+
+# ╔═╡ 61a88a15-3a87-485f-8fdc-5d82d8bc1516
+diag(MCA)
+
+# ╔═╡ 4520fc6e-7305-487e-924d-af22406e6d45
+begin
+	RCA = transpose(B)*B
+end
+
+# ╔═╡ 50bb0e9e-074d-46b6-9db0-9c27dbc146f5
+diag(RCA)
+
+# ╔═╡ 97b0763d-dcab-4afa-b660-52e18b3d523f
+begin
+	# compute the extreme pathways Tableu -
+	PM = lib.expa(S)
+	
+	# P constraints the extreme pathways (rows) and 𝒩 is the "balanced" array (should be all zeros) -
+	P = PM[:,1:R]
+	N = PM[:,(R+1):end]
+
+	#show -
+	nothing
+end
+
+# ╔═╡ 035c1422-45af-476c-94bd-d75aa08ffcd4
+P
+
+# ╔═╡ 5b7527d0-7b85-4bbc-9e65-c7faa6aa630a
+#reaction frequency -
+reaction_frequency_array = [size([expa for expa in P[:,rxn] if expa != 0],1) for rxn=1:size(P,2)]/n_expa
+
+# ╔═╡ 41f582ed-a861-44c7-b968-9499e5204ff0
+begin
+scatter(RCA, reaction_frequency_array, legend = false, xlabel="RCA",ylabel="Reaction Frequency")
+end
+
+# ╔═╡ 92351404-c84f-4ec4-8f8c-374951316cfa
+N #array is full of zeros - balanced array; hence, our network seems to be right
+
 # ╔═╡ ab2bcfd5-3ba7-4388-8a3c-2cb95fba989a
 html"""
 <style>
@@ -100,175 +239,6 @@ a {
     text-decoration: none;
 }
 </style>"""
-
-# ╔═╡ 31b4051b-4bf0-40d1-bb7e-950e0eea8bb6
-function binary_stoichiometric_matrix(matrix::Array{Float64,2})::Array{Int64,2}
-
-	# initialize -
-	(ℳ,ℛ) = size(matrix)
-	B = Array{Int64,2}(undef,ℳ,ℛ)
-
-	for row_index ∈ 1:ℳ
-		for col_index ∈ 1:ℛ
-
-			old_value = matrix[row_index,col_index]
-			if (old_value == 0.0)
-				B[row_index,col_index] = 0
-			else
-				B[row_index,col_index] = 1
-			end
-		end
-	end
-	
-	# return -
-	return B
-end
-
-# ╔═╡ 458758a7-caab-453b-8689-f2e289ed49b3
-function extract_species_dictionary(reaction_phrase::String;
-	direction::Float64 = -1.0)::Dict{String,Float64}
-
-	# initialize -
-	species_symbol_dictionary = Dict{String,Float64}()
-	
-	# ok, do we hve a +?
-	component_array = split(reaction_phrase,'+');
-	for component ∈ component_array
-
-		if (contains(component,'*') == true)
-			
-			tmp_array = split(component,'*')
-			st_coeff = direction*parse(Float64,tmp_array[1])
-			species_symbol = String(tmp_array[2])
-
-			# don't cache the ∅ -
-			if (species_symbols != "∅")
-				species_symbol_dictionary[species_symbol] = st_coeff
-			end
-		else 
-			
-			# strip any spaces -
-			species_symbol = component |> lstrip |> rstrip
-
-			# don't cache the ∅ -
-			if (species_symbol != "∅")
-				species_symbol_dictionary[species_symbol] = direction*1.0
-			end
-		end
-	end
-
-	# return -
-	return species_symbol_dictionary
-end
-
-# ╔═╡ 7b3d858a-e5af-4940-b717-4e6bb047d360
-function build_stoichiometric_matrix(reactions::Array{String,1})::Tuple{Array{Float64,2},
-	Array{String,1}, Array{String,1}}
-
-	# initialize -
-	species_array = Array{String,1}()
-	reaction_array = Array{String,1}()
-	reaction_dictionary_array = Array{Dict{String,Float64},1}()
-	
-	# first: let's discover the species list -
-	for reaction_string ∈ reactions
-
-		# initialize tmp storage -
-		tmp_dictionary = Dict{String,Float64}()
-		
-		# split the reaction into its components -
-		component_array = split(reaction_string,',');
-
-		# reaction name -
-		reaction_name = String.(component_array[1]);
-		push!(reaction_array, reaction_name);
-		
-		# reactant phrase => 2, and product phrase => 3
-		reactant_phrase = String.(component_array[2]);
-		product_phrase = String.(component_array[3]);
-
-		# generate species lists for the reactants and products, then merge -
-		merge!(tmp_dictionary, extract_species_dictionary(reactant_phrase; direction = -1.0))
-		merge!(tmp_dictionary, extract_species_dictionary(product_phrase; direction = 1.0))
-
-		# grab the tmp_dictionary for later -
-		push!(reaction_dictionary_array, tmp_dictionary)
-
-		# the species that we need to look at are the keys of the tmp_dictionary -
-		tmp_species_list = keys(tmp_dictionary)
-		
-		# we need a unique species list, so check to see if we have already discovered this species -
-		for tmp_species ∈ tmp_species_list
-
-			if (in(tmp_species, species_array) == false)
-
-				# ok, we have *not* seen this species before, let's grab it -
-				push!(species_array, tmp_species)
-			end
-		end
-	end
-
-	# sort alphabetically -
-	sort!(species_array)
-
-	# we have a *unique* species array, let's initialize some storage for the stoichiometric array
-	S = zeros(length(species_array), length(reactions));
-
-	# last: fill in the values for stoichiometric coefficents -
-	for (row_index, species_symbol) ∈ enumerate(species_array)
-		for (col_index, reaction_dictionary) ∈ enumerate(reaction_dictionary_array)
-
-			# ok: is this species symbol in my reaction dictionary?
-			if (haskey(reaction_dictionary, species_symbol) == true)
-				S[row_index,col_index] = reaction_dictionary[species_symbol]
-			end
-		end
-	end
-
-	# return -
-	return (S, species_array, reaction_array)
-end
-
-# ╔═╡ 5338451e-3c4b-4030-bbbb-42eaf4209a89
-begin
-	# Setup a collection of reaction strings -
-	reaction_array = Array{String,1}()
-
-	# encode the reactions -
-	push!(reaction_array,"v₁,ASP+CIT,ARGS,false")
-	push!(reaction_array,"v₂,ARGS,FUM+ARG,false")
-	push!(reaction_array,"v₃,ARG,ORN+UREA,false")
-	push!(reaction_array,"v₄,ORN+CP,CIT,false")
-	push!(reaction_array,"v₅,CIT,ARG,true")
-	push!(reaction_array,"b₁,∅,CP,false")
-	push!(reaction_array,"b₂,∅,ASP,false")
-	push!(reaction_array,"b₃,FUM,∅,false")
-	push!(reaction_array,"b₄,UREA,∅,false")
-	
-	# compute the stoichiometric matrix -
-	(S, species_array, reaction_name_array) = build_stoichiometric_matrix(reaction_array);
-
-	# show -
-	nothing
-end
-
-# ╔═╡ ed5e0bd3-2c03-41fd-955d-fe72f54a22c0
-(ℳ,ℛ) = size(S)
-
-# ╔═╡ fa5ddf84-b9c4-48f3-8b5d-373e1b473842
-species_array
-
-# ╔═╡ be4701c6-5fe9-444f-80e8-b501465c4bee
-S
-
-# ╔═╡ 6dac6ee8-bbfa-4333-9406-0974463e567e
-#building the binary stoichiometric matrix
-B = S |> binary_stoichiometric_matrix
-
-# ╔═╡ 999ae1fd-5341-4f66-9db2-dec53fa0cd49
-begin
-	MCA = B*transpose(B)
-end
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
@@ -1264,22 +1234,35 @@ version = "0.9.1+5"
 # ╟─7057c8e4-9e94-4a28-a885-07f5c96ebe39
 # ╟─87a183bc-3857-4189-8103-18c46ff3245d
 # ╠═5338451e-3c4b-4030-bbbb-42eaf4209a89
-# ╠═ed5e0bd3-2c03-41fd-955d-fe72f54a22c0
-# ╠═fa5ddf84-b9c4-48f3-8b5d-373e1b473842
-# ╠═be4701c6-5fe9-444f-80e8-b501465c4bee
+# ╠═1498ca36-3870-4b19-9794-923153816643
+# ╠═ed1a97f7-c10e-4874-be48-ac8066e45301
+# ╠═2297a0e5-aa0e-43ad-95cc-fbb07d7c1c86
+# ╠═062af4ad-445f-400d-86f1-2bfc99b643b0
+# ╠═9a98c403-9f9f-4b07-8482-d12309de7bc8
 # ╟─6970dab5-16bd-4898-b88d-723cb1b3d89e
 # ╠═97b0763d-dcab-4afa-b660-52e18b3d523f
+# ╠═035c1422-45af-476c-94bd-d75aa08ffcd4
+# ╟─eb4fe95f-a54e-456a-a443-978ed227edfd
+# ╠═1a345dd5-e8bf-4c9e-90aa-493394ba24a1
+# ╟─cb5e7a26-d311-4a62-83c8-323a07e935a6
+# ╟─a2ba2e62-7a4f-47e8-bce9-9aa4fa41c96a
+# ╠═5b7527d0-7b85-4bbc-9e65-c7faa6aa630a
+# ╟─29ca1e0c-6bb5-4710-a1af-525a64a18633
+# ╠═92351404-c84f-4ec4-8f8c-374951316cfa
 # ╟─b473b17e-3bf5-4b6c-af24-fe57b5a7e7e9
-# ╠═6dac6ee8-bbfa-4333-9406-0974463e567e
 # ╠═999ae1fd-5341-4f66-9db2-dec53fa0cd49
+# ╠═61a88a15-3a87-485f-8fdc-5d82d8bc1516
+# ╟─e5729d05-0f4b-466a-bb90-65dba06e6de8
 # ╟─b7e5d1a6-57ed-4d09-a039-a4bd12386367
 # ╠═4520fc6e-7305-487e-924d-af22406e6d45
-# ╟─67f5db98-88d0-11ec-27ac-b57538a166f4
-# ╟─8dff5060-d810-4fa8-b229-89f8bd6c3601
+# ╠═50bb0e9e-074d-46b6-9db0-9c27dbc146f5
+# ╟─a1779026-14f4-4acd-8189-3ac916b3ca31
+# ╟─c0f3f6f2-2b86-4e03-990b-9dea3dc1fd4f
+# ╠═41f582ed-a861-44c7-b968-9499e5204ff0
+# ╟─b26f56b1-e6b8-40b7-ac69-d03389678b64
+# ╟─4c7815da-0e57-4974-a42f-a768e98b56f6
+# ╠═67f5db98-88d0-11ec-27ac-b57538a166f4
 # ╠═267865de-1b5c-4579-861b-c6c46beb4739
-# ╠═ab2bcfd5-3ba7-4388-8a3c-2cb95fba989a
-# ╠═31b4051b-4bf0-40d1-bb7e-950e0eea8bb6
-# ╠═7b3d858a-e5af-4940-b717-4e6bb047d360
-# ╠═458758a7-caab-453b-8689-f2e289ed49b3
+# ╟─ab2bcfd5-3ba7-4388-8a3c-2cb95fba989a
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
